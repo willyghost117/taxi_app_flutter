@@ -26,16 +26,23 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
-  LoginPage({Key? key}) : super(key: key);
+  bool isLoading = false;
 
   Future<void> enviarCredenciales(String username, String password, BuildContext context) async {
     final url = Uri.parse('http://10.147.17.64:8000/user/api/token/');
-    print(username);
-    print(password);
+    setState(() {
+      isLoading = true;
+    });
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -49,6 +56,9 @@ class LoginPage extends StatelessWidget {
     } else {
       print('Error: ${response.reasonPhrase}');
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -73,14 +83,18 @@ class LoginPage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                enviarCredenciales(
-                  usernameController.text,
-                  passwordController.text,
-                  context,
-                );
-              },
-              child: const Text('Iniciar sesión'),
+              onPressed: isLoading
+                  ? null
+                  : () {
+                      enviarCredenciales(
+                        usernameController.text,
+                        passwordController.text,
+                        context,
+                      );
+                    },
+              child: isLoading
+                  ? CircularProgressIndicator()
+                  : const Text('Iniciar sesión'),
             ),
           ],
         ),
