@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:taxi_app/service/service.dart';
 import 'package:taxi_app/theme.dart';
 import 'package:taxi_app/widgets/snackbar.dart';
 
@@ -19,6 +20,8 @@ class _SignInState extends State<SignIn> {
 
   bool _obscureTextPassword = true;
 
+  late String username;
+  late String password;
   @override
   void dispose() {
     focusNodeEmail.dispose();
@@ -41,7 +44,7 @@ class _SignInState extends State<SignIn> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
-                child: Container(
+                child: SizedBox(
                   width: 300.0,
                   height: 190.0,
                   child: Column(
@@ -160,8 +163,12 @@ class _SignInState extends State<SignIn> {
                           fontFamily: 'WorkSansBold'),
                     ),
                   ),
-                  onPressed: () => CustomSnackBar(
-                      context, const Text('Login button pressed')),
+                  onPressed: () => 
+                  enviarCredenciales(
+                loginEmailController.text, // Obtén el nombre de usuario del controlador de texto del correo electrónico
+                loginPasswordController.text, // Obtén la contraseña del controlador de texto de la contraseña
+                context, // Pasa el contexto para la navegación
+                  )
                 ),
               )
             ],

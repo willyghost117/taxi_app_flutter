@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:taxi_app/service/service.dart';
 import 'package:taxi_app/theme.dart';
 import 'package:taxi_app/widgets/snackbar.dart';
 
@@ -25,6 +26,7 @@ class _SignUpState extends State<SignUp> {
   TextEditingController signupConfirmPasswordController =
       TextEditingController();
 
+ 
   @override
   void dispose() {
     focusNodePassword.dispose();
@@ -244,7 +246,17 @@ class _SignUpState extends State<SignUp> {
                           fontFamily: 'WorkSansBold'),
                     ),
                   ),
-                  onPressed: () => _toggleSignUpButton(),
+                  onPressed: () async {
+                  bool register = await registrarUsuario(
+                    signupNameController.text,
+                    signupEmailController.text,
+                    signupPasswordController.text,
+                    signupConfirmPasswordController.text,
+                    context,
+                  );
+                  _showRegisterResultDialog(register, context);
+                },
+
                 ),
               )
             ],
@@ -270,3 +282,26 @@ class _SignUpState extends State<SignUp> {
     });
   }
 }
+void _showRegisterResultDialog(success,context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(success ? 'Registro Exitoso' : 'Error en el Registro'),
+        content: Text(success
+            ? '¡Tu cuenta ha sido registrada exitosamente!'
+            : 'Hubo un error,el usuario o correo ya existe'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              // Cierra la alerta y vuelve a la pantalla anterior
+              Navigator.of(context).pop();
+            },
+            child: const Text('Aceptar'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
