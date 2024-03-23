@@ -254,7 +254,9 @@ class _SignUpState extends State<SignUp> {
                     signupConfirmPasswordController.text,
                     context,
                   );
+                  print(register);
                   _showRegisterResultDialog(register, context);
+                  
                 },
 
                 ),
